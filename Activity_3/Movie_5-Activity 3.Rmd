@@ -1,0 +1,82 @@
+---
+title: "Movie_5-Activity 3"
+author: "Neo Michael Kenneth Espia"
+date: "2024-02-19"
+output: html_document
+---
+
+```{r }
+# Install and load required packages
+install.packages("rvest")
+install.packages("httr")
+install.packages("polite")
+```
+
+```{r}
+
+library(rvest)
+library(httr)
+library(polite)
+```
+
+```{r}
+# Set up polite scraper
+polite::use_manners(save_as = 'polite_scrape.R')
+```
+
+```{r}
+# Define the URL template
+url_template <- 'https://www.imdb.com/title/tt0076759/reviews/_ajax?ref_=undefined&paginationKey=%s'
+```
+
+```{r}
+# Initialize vectors
+Usernames <- character(0)
+ReviewerDates <- character(0)
+ReviewerContents <- character(0)
+Ratings <- character(0)
+```
+
+```{r}
+# Scrape data from multiple pages
+reviews_to_scrape <- 300
+pagination_key <- ""
+for (page in 1:ceiling(reviews_to_scrape / 25)) {
+  session <- bow(sprintf(url_template, pagination_key), user_agent = "Educational")
+  
+  # Scrape data
+  Usernames <- c(Usernames, scrape(session) %>% html_nodes('span.display-name-link') %>% html_text())
+  ReviewerDates <- c(ReviewerDates, scrape(session) %>% html_nodes('span.review-date') %>% html_text())
+  ReviewerContents <- c(ReviewerContents, scrape(session) %>% html_nodes('div.text.show-more__control') %>% html_text())
+  Ratings <- c(Ratings, scrape(session) %>% html_nodes('span.rating-other-user-rating') %>% html_text())
+  
+  # Extract pagination key for the next page
+  pagination_key <- scrape(session) %>% html_nodes("div.load-more-data") %>% html_attr("data-key")
+  
+  # Check if we have reached the desired number of reviews
+  if (length(Usernames) >= reviews_to_scrape) {
+    break
+  }
+}
+```
+
+```{r}
+# Create a data frame
+DataFrame <- data.frame(
+  Usernames = Usernames[1:300],
+  Reviewer_Date = ReviewerDates[1:300],
+  Reviewer_Content = ReviewerContents[1:300],
+  Rating = Ratings[1:300]
+)
+```
+
+```{r}
+# Save as CSV
+write.csv(DataFrame, file = "Movie_5-Activity 3.csv", row.names = FALSE)
+```
+
+```{r}
+# Print the data frame
+print(DataFrame)
+
+```
