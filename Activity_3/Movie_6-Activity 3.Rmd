@@ -26,7 +26,7 @@ polite::use_manners(save_as = 'polite_scrape.R')
 
 ```{r}
 # Define the URL template
-url_template <- 'https://www.imdb.com/title/tt0253474/reviews/_ajax?ref_=undefined&paginationKey=%s'
+url_template <- 'https://www.imdb.com/title/tt15398776/reviews/_ajax?ref_=undefined&paginationKey=%s'
 ```
 
 ```{r}
@@ -63,6 +63,7 @@ for (page in 1:ceiling(reviews_to_scrape / 25)) {
 ```{r}
 # Create a data frame
 DataFrame <- data.frame(
+  Movie_Title = rep("Oppenheimer", reviews_to_scrape),
   Usernames = Usernames[1:300],
   Reviewer_Date = ReviewerDates[1:300],
   Reviewer_Content = ReviewerContents[1:300],
@@ -72,7 +73,7 @@ DataFrame <- data.frame(
 
 ```{r}
 # Save as CSV
-write.csv(DataFrame, file = Movie_7-Activity 3.csv", row.names = FALSE)
+write.csv(DataFrame, file = "Movie_6-Activity 3.csv", row.names = FALSE)
 ```
 
 ```{r}

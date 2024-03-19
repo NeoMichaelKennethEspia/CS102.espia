@@ -63,6 +63,8 @@ for (page in 1:ceiling(reviews_to_scrape / 25)) {
 ```{r}
 # Create a data frame
 DataFrame <- data.frame(
+  Movie_Title = rep("The Lord of the Rings: The Return of the King
+", reviews_to_scrape),
   Usernames = Usernames[1:300],
   Reviewer_Date = ReviewerDates[1:300],
   Reviewer_Content = ReviewerContents[1:300],
